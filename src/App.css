@@ -1,38 +1,57 @@
 .App {
   text-align: center;
+  padding: 20px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+h1 {
+  margin-bottom: 30px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.game-info {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  margin-bottom: 20px;
 }
 
-.App-link {
-  color: #61dafb;
+.game-info p {
+  margin-right: 20px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.puzzle-container {
+  width: 400px;
+  height: 400px;
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+  border: 1px solid #ccc;
+  margin: 0 auto;
+  margin-bottom: 30px;
 }
+
+.tile {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+  position: absolute;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.tile.game-over {
+  border-color: #ff0000;
+}
+
+.game-over-message {
+  margin-top: 20px;
+  font-weight: bold;
+  color: #ff0000;
+}
+
+.game-over-message button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+/* Uncomment the following line to add a background color to the tiles */
+/*.tile { background-color: #eee; }*/
