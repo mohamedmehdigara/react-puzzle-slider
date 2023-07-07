@@ -28,11 +28,14 @@ function App() {
   const initializeTiles = () => {
     const tempTiles = [];
     const tileSize = 400 / NUM_ROWS;
+    const tilePositions = Array.from({ length: NUM_ROWS * NUM_COLS }, (_, index) => index);
 
     for (let row = 0; row < NUM_ROWS; row++) {
       for (let col = 0; col < NUM_COLS; col++) {
+        const randomIndex = Math.floor(Math.random() * tilePositions.length);
+        const positionIndex = tilePositions.splice(randomIndex, 1)[0];
         const tile = {
-          id: row * NUM_COLS + col,
+          id: positionIndex,
           row,
           col,
           x: col * tileSize,
@@ -48,26 +51,25 @@ function App() {
     setTimer(0);
   };
 
-  const handleTileClick = (tile) => {
+  const handleTileClick = (clickedTile) => {
     if (gameOver) return;
 
-    const { row, col } = tile;
-    const emptyTile = tiles.find((t) => t.id === NUM_ROWS * NUM_COLS - 1);
+    const emptyTile = tiles.find((tile) => tile.id === NUM_ROWS * NUM_COLS - 1);
 
-    if (isAdjacent(tile, emptyTile)) {
-      const tempTiles = [...tiles];
-      const tileIndex = tempTiles.indexOf(tile);
-      const emptyTileIndex = tempTiles.indexOf(emptyTile);
+    if (isAdjacent(clickedTile, emptyTile)) {
+      const updatedTiles = tiles.map((tile) => {
+        if (tile.id === clickedTile.id) {
+          return { ...tile, row: emptyTile.row, col: emptyTile.col };
+        } else if (tile.id === emptyTile.id) {
+          return { ...tile, row: clickedTile.row, col: clickedTile.col };
+        } else {
+          return tile;
+        }
+      });
 
-      // Swap positions
-      [tempTiles[tileIndex], tempTiles[emptyTileIndex]] = [
-        tempTiles[emptyTileIndex],
-        tempTiles[tileIndex],
-      ];
-
-      setTiles(tempTiles);
+      setTiles(updatedTiles);
       setMoves((prevMoves) => prevMoves + 1);
-      checkGameOver(tempTiles);
+      checkGameOver(updatedTiles);
     }
   };
 
@@ -89,18 +91,18 @@ function App() {
         key={tile.id}
         className={`tile ${gameOver ? 'game-over' : ''}`}
         style={{
-          backgroundImage: `url(${IMAGE_URL})`,
-          backgroundPosition: `${-tile.x}px ${-tile.y}px`,
+          background: `url(${IMAGE_URL}) no-repeat ${-tile.col * (400 / NUM_COLS)}px ${-tile.row * (400 / NUM_ROWS)}px`,
+          backgroundSize: `${400}px ${400}px`,
           width: `${400 / NUM_COLS}px`,
           height: `${400 / NUM_ROWS}px`,
-          top: `${tile.y}px`,
-          left: `${tile.x}px`,
+          top: `${tile.row * (400 / NUM_ROWS)}px`,
+          left: `${tile.col * (400 / NUM_COLS)}px`,
         }}
         onClick={() => handleTileClick(tile)}
       />
     ));
   };
-
+  
   return (
     <div className="App">
       <h1>Puzzle Slider Game</h1>
